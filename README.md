@@ -67,6 +67,13 @@ If you have further questions or if you're curious, we can discuss this point du
 
 ### Try solution
 
+Create a virtual env and source it
+
+    Depends a bit on your python version and OS
+
+The project is based only on Pillow so you can just
+
+    > pip install Pillow
 
 To run a random sample just type
 

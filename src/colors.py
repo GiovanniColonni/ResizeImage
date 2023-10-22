@@ -1,5 +1,3 @@
-from PIL import Image
-import numpy as np
 from sklearn.cluster import KMeans
 import logging
 
@@ -18,8 +16,8 @@ def extract_dominant_colors_from_palette(palette, num_colors=5):
     kmeans.fit(palette)
 
     # Get the RGB values of the cluster centers (dominant colors)
-    dominant_colors = kmeans.cluster_centers_
-    labels = kmeans.labels_
+    dominant_colors = kmeans.cluster_centers_ # Dominant colors
+    labels = kmeans.labels_ # Dominant labels -> which color belongs to which cluster
 
     label_data = {}
     for label, center in enumerate(dominant_colors):
@@ -31,6 +29,12 @@ def extract_dominant_colors_from_palette(palette, num_colors=5):
 
     return dominant_colors, label_data
 
+
+"""
+The idea here is to calculate the average similarity between the pixel color and the dominant colors
+associated points. The dominant labels color with the highest average 
+similarity will be the one that will be used to replace the pixel color.
+"""
 
 def avg_similatiry(color, dominant_labels):
     pass
