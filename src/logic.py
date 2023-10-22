@@ -1,13 +1,10 @@
 import colorsys
 import random
-from threading import Thread
 from PIL import Image,ImageDraw,UnidentifiedImageError
-from sys import argv
-from config import TARGET_SIZE, QUALITY, PATH_BASE, PATH_INVALID, PATH_OUTPUT,NAMES
+from config import TARGET_SIZE, QUALITY
 from decorators import log_time
 from colors import extract_dominant_colors_from_palette
 import logging
-from os import listdir
 
 logging.basicConfig()
 logging.root.setLevel(logging.INFO)
@@ -38,8 +35,10 @@ def get_valid_image(path) -> object | bool:
     try:
         img = Image.open(path)
         img.load()
+
         logging.info(f"Image format : {img.format}")
         logging.info(f"Image mode : {img.mode}")
+
         if(img.mode != "RGBA"):
             logging.info(f"Image mode : {img.mode} converting to RGBA")
             img = img.convert("RGBA")
@@ -87,6 +86,7 @@ def get_palette_sentiment(img:object) -> dict:
     len_palette = len(palette)
     dominats = palette
     
+
     if(len(palette) > 15):
         dominats,dominant_map = extract_dominant_colors_from_palette(palette)
     
@@ -110,8 +110,7 @@ def get_palette_sentiment(img:object) -> dict:
 def resize_image(path:str,path_out:str):
     image = Image.open(path)
 
-    # Create a thumbnail with the given size
-    # antialis algorithm
+    # Antialis algorithm
     # https://stackoverflow.com/questions/76616042/attributeerror-module-pil-image-has-no-attribute-antialias
     # or .thumbnail
     resized = image.resize(TARGET_SIZE, Image.LANCZOS)
@@ -170,9 +169,15 @@ def is_happy(rgb):
 
     return any(start <= h < end for start, end in happy_color_ranges)
 
+def is_transparent(rgba):
+    r, g, b, a = rgba
+    return a > 0.9
+
 def get_colors(img:object):
+    out_pixel = False
     width, height = TARGET_SIZE
     colors = []
+    drawer = ImageDraw.Draw(img)
     for x in range(width):
         for y in range(height):
             if is_pixel_inside_circle(x,y) and img.getpixel((x,y)) != (255,255,255,0) and img.getpixel((x,y)) != (0,0,0,0) :
@@ -181,7 +186,15 @@ def get_colors(img:object):
                 pixel_ = (pixel[0],pixel[1],pixel[2],0)
                 if(pixel_ not in colors):
                     colors.append(pixel_)
-    
+            else:
+                # create the circle
+                if(
+                    not is_transparent(img.getpixel((x,y))) and 
+                    not out_pixel
+                 ):
+                    out_pixel = True
+                    logging.info(f"Out Pixel found: {img.getpixel((x,y))}")
+                drawer.point((x,y),fill=(255, 0, 0, 0)) # just set alpha channel
     return colors
 
 def swap_dominants(img:object,dominants:dict):
@@ -249,7 +262,7 @@ def base(path:str,path_out:str):
         logging.error("Invalid image")
         return
     
-    check_shape(img)
+    #check_shape(img)
     happy(img)
 
     logging.info(f"Saving image at {path_out}")
