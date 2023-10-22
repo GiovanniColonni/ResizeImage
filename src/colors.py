@@ -34,6 +34,7 @@ def extract_dominant_colors_from_palette(palette, num_colors=5):
 The idea here is to calculate the average similarity between the pixel color and the dominant colors
 associated points. The dominant labels color with the highest average 
 similarity will be the one that will be used to replace the pixel color.
+The dominant color select will be mapped to an happy color.
 """
 
 def avg_similatiry(color, dominant_labels):
@@ -41,5 +42,9 @@ def avg_similatiry(color, dominant_labels):
 
 def get_nearest_dominant_swap(color, dominant_colors):
     for dc,labels in dominant_colors:
+        # calculate similaties_array with avg_similatiry(labels)
         pass
     pass
+    #this color will be remapped
+    #return dominant_colors[max(similaties_array)]
+    
