@@ -80,7 +80,7 @@ def check_shape(img):
 
 @log_time
 def get_palette_sentiment(img:object) -> dict:
-
+    logging.info(f"Happy - Check if the palette colors is happy,")
     palette = get_colors(img)
     logging.info(f"Palette colors found: {len(palette)}")
     len_palette = len(palette)
@@ -92,8 +92,6 @@ def get_palette_sentiment(img:object) -> dict:
     
     happy_colors = [(is_happy(color),color) for color in dominats]
     
-    logging.info(f"Happy colors found: {sum(1 for v in happy_colors if(v[0]))}")
-
     h = sum(1 for v in happy_colors if(v[0]))
     if(h > 2 and h > int(len(happy_colors)/2)):
         h = h > int(len(happy_colors)/2)
@@ -101,15 +99,18 @@ def get_palette_sentiment(img:object) -> dict:
         h = h > 0
         
     logging.info(f"Is happy? {h}")
-    if len_palette > 2:
+    if len_palette < 2:
         logging.info(f" - Maybe we can fix this..")
-
+        no_happy_map = remap_sad_colors(palette)
+        logging.info(f" - Swapping colors {no_happy_map}")
+        swap_no_dominants(img,no_happy_map)
+        
+        
     return 
 
 @log_time
 def resize_image(path:str,path_out:str):
     image = Image.open(path)
-
     # Antialis algorithm
     # https://stackoverflow.com/questions/76616042/attributeerror-module-pil-image-has-no-attribute-antialias
     # or .thumbnail
@@ -170,6 +171,8 @@ def is_happy(rgb):
     return any(start <= h < end for start, end in happy_color_ranges)
 
 def is_transparent(rgba):
+    if(rgba == (0, 0, 0, 0)):
+        return True
     r, g, b, a = rgba
     return a > 0.9
 
@@ -193,8 +196,12 @@ def get_colors(img:object):
                     not out_pixel
                  ):
                     out_pixel = True
-                    logging.info(f"Out Pixel found: {img.getpixel((x,y))}")
+                    logging.info(f"No transparent pixel found: {img.getpixel((x,y))}")
                 drawer.point((x,y),fill=(255, 0, 0, 0)) # just set alpha channel
+    
+    if(not out_pixel):
+        logging.info(f"There are no non-transparent pixel out of the circle")
+
     return colors
 
 def swap_dominants(img:object,dominants:dict):
@@ -203,10 +210,11 @@ def swap_dominants(img:object,dominants:dict):
 def swap_no_dominants(img:object,no_happy:dict):
     def getColor(t,m):
         return [p[1] for p in m if p[0] == t][-1]
-    #img.convert("RGB")
+
     img_drawer = ImageDraw.Draw(img)
-    # note assunzione array corto
+    
     width, height = TARGET_SIZE
+    logging.info(f"Swapping no dominants colors {no_happy}")
     no_happy_s = [c[0] for c in no_happy]
     logging.info(f"Swapping no dominants colors {no_happy_s}")
     for x in range(width):
@@ -219,10 +227,11 @@ def swap_no_dominants(img:object,no_happy:dict):
             else:
                 img_drawer.point((x,y),fill=(255,255,255,0)) # just set alpha channel
 
+
     return
 
 def remap_sad_colors(colors:list):    
-    return[(color[1],get_random_happy_color()) for color in colors if(not color[0])]
+    return[(color,get_random_happy_color()) for color in colors if(not color[0])]
     
 def make_happy(img:object,info:dict):
     if(info["dominant_map"] != {}):
@@ -248,9 +257,6 @@ def happy_or_swap(img:object):
     
     return info
 
-def happy(img:object):
-    logging.info(f"Happy - Check if the palette colors is happy,")
-    return get_palette_sentiment(img)
     
 
 @log_time
@@ -263,7 +269,7 @@ def base(path:str,path_out:str):
         return
     
     #check_shape(img)
-    happy(img)
+    get_palette_sentiment(img)
 
     logging.info(f"Saving image at {path_out}")
     

@@ -6,7 +6,13 @@ import logging
 logging.basicConfig()
 logging.root.setLevel(logging.INFO)
 
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
+
 def extract_dominant_colors_from_palette(palette, num_colors=5):
+    logging.info(f"Start clustering, number of centers: {num_colors}")
     # Use K-Means clustering to extract dominant colors
     kmeans = KMeans(n_clusters=num_colors)
     kmeans.fit(palette)
