@@ -214,7 +214,6 @@ def swap_no_dominants(img:object,no_happy:dict):
     img_drawer = ImageDraw.Draw(img)
     
     width, height = TARGET_SIZE
-    logging.info(f"Swapping no dominants colors {no_happy}")
     no_happy_s = [c[0] for c in no_happy]
     logging.info(f"Swapping no dominants colors {no_happy_s}")
     for x in range(width):
