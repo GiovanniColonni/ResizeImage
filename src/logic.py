@@ -196,7 +196,7 @@ def get_colors(img:object):
                     not out_pixel
                  ):
                     out_pixel = True
-                    logging.info(f"No transparent pixel found: {img.getpixel((x,y))}")
+                    logging.info(f"Transparent pixel found: {img.getpixel((x,y))}")
                 drawer.point((x,y),fill=(255, 0, 0, 0)) # just set alpha channel
     
     if(not out_pixel):

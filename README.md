@@ -81,6 +81,17 @@ To run a specific sample just type the name without extension for PNG
 
 # Example of execution:
 
+Down here there are some examples of execution with logs and information. 
+
+The results are that:
+
+- Conversion works in all cases
+- The resizing process does not break the image quality and 
+  can potentially work in a real use case
+- Color analysis is not sentiment analysis -> very hard to determine if an image is happy from the color palette.
+-  Determining the palette can be an expensive task when the clustering algorithm is used. 
+- Note about execution time -> does not really matter numerically even because is influences by a wide number of factory, it's just a way to give the idea of the difference between images.
+
 ### Sample 1
 
 Sample Info
@@ -92,24 +103,23 @@ Sample Info
 
 | Sample Input | Output Image | Execution Time|
 | ------------ |------------ | ------------- |
-|![Image 1](./examples/base/home.jpg)| ![Image 2](./examples/output/home.png) | 13.65 seconds|
-```
-Program output
+|![Image 1](./examples/base/home.jpg)| ![Image 2](./examples/output/home.png) | 13.42 seconds|
 
-INFO:root:Parallel - Image path: ./examples/base/home.jpg
-INFO:root:Image format : PNG
-INFO:root:Image mode : RGBA
-INFO:root:Original image size : (599, 371)
-INFO:root:Resizing image
-INFO:root:Happy - Check if the palette colors is happy,
-INFO:root:Palette colors found: 16613
-INFO:root:Start clustering, number of centers: 5
-INFO:root:Is happy? True
-INFO:root:get_palette_sentiment took 13.69 seconds to execute.
-INFO:root:Saving image at ./examples/output/home.png
-INFO:root:base took 13.80 seconds to execute.
 ```
-
+> python3 ./src/main.py home.jpg
+    INFO:root:Parallel - Image path: ./examples/base/home.jpg
+    INFO:root:Image format : PNG
+    INFO:root:Image mode : RGBA
+    INFO:root:Original image size : (599, 371)
+    INFO:root:Resizing image
+    INFO:root:Happy - Check if the palette colors is happy,
+    INFO:root:Palette colors found: 16613
+    INFO:root:Start clustering, number of centers: 5
+    INFO:root:Is happy? True
+    INFO:root:get_palette_sentiment took 13.42 seconds to execute.
+    INFO:root:Saving image at ./examples/output/home.png
+    INFO:root:base took 13.53 seconds to execute.
+```
 ### Sample 2
 
 Sample Info
@@ -120,24 +130,23 @@ Sample Info
 
 | Sample Input | Output Image | Execution Time|
 | ------------ |------------ | ------------- |
-|![Image 1](./examples/base/b44.png)| ![Image 2](./examples/output/b44.png) | 7.50 seconds|
+|![Image 1](./examples/base/b44.png)| ![Image 2](./examples/output/b44.png) | 7.03 seconds|
 
 ```
-Program output
-
-INFO:root:Parallel - Image path: ./examples/base/b44.png
-INFO:root:Image format : PNG
-INFO:root:Image mode : RGBA
-INFO:root:Original image size : (400, 400)
-INFO:root:Resizing image
-INFO:root:Happy - Check if the palette colors is happy,
-INFO:root:Out Pixel found: (0, 0, 0, 0)
-INFO:root:Palette colors found: 15017
-INFO:root:Start clustering, number of centers: 5
-INFO:root:Is happy? True
-INFO:root:get_palette_sentiment took 7.45 seconds to execute.
-INFO:root:Saving image at ./examples/output/b44.png
-INFO:root:base took 7.50 seconds to execute.
+> python3 ./src/main.py b44
+    INFO:root:Parallel - Image path: ./examples/base/b44.png
+    INFO:root:Image format : PNG
+    INFO:root:Image mode : RGBA
+    INFO:root:Original image size : (400, 400)
+    INFO:root:Resizing image
+    INFO:root:Happy - Check if the palette colors is happy,
+    INFO:root:Transparent pixel found: (0, 1, 1, 0)
+    INFO:root:Palette colors found: 15017
+    INFO:root:Start clustering, number of centers: 5
+    INFO:root:Is happy? True
+    INFO:root:get_palette_sentiment took 6.98 seconds to execute.
+    INFO:root:Saving image at ./examples/output/b44.png
+    INFO:root:base took 7.03 seconds to execute.
 ```
 
 ### Sample 3
@@ -150,21 +159,22 @@ Sample Info
 
 | Sample Input | Output Image | Execution Time|
 | ------------ |------------ | ------------- |
-|![Image 1](./examples/base/basket.png)| ![Image 2](./examples/output/basket.png) |  1.35 seconds|
+|![Image 1](./examples/base/basket.png)| ![Image 2](./examples/output/basket.png) |  93.29 seconds|
 ```
+> python3 ./src/main.py basket
 INFO:root:Parallel - Image path: ./examples/base/basket.png
 INFO:root:Image format : PNG
 INFO:root:Image mode : RGBA
 INFO:root:Original image size : (500, 900)
 INFO:root:Resizing image
 INFO:root:Happy - Check if the palette colors is happy,
-INFO:root:Out Pixel found: (0, 0, 1, 0)
+INFO:root:No transparent pixel found: (0, 0, 1, 0)
 INFO:root:Palette colors found: 100799
 INFO:root:Start clustering, number of centers: 5
 INFO:root:Is happy? True
-INFO:root:get_palette_sentiment took 94.43 seconds to execute.
+INFO:root:get_palette_sentiment took 93.15 seconds to execute.
 INFO:root:Saving image at ./examples/output/basket.png
-INFO:root:base took 94.56 seconds to execute.
+INFO:root:base took 93.29 seconds to execute.
 ```
 
 ### Sample 4
@@ -179,18 +189,19 @@ Sample Info
 | ------------ |------------ | ------------- |
 |![Image 1](./examples/base/eyes.png)| ![Image 2](./examples/output/eyes.png) | 0.86 seconds|
 ```
-Program output logs:
+> python3 ./src/main.py eyes
 
 INFO:root:Parallel - Image path: ./examples/base/eyes.png
 INFO:root:Image format : PNG
 INFO:root:Image mode : RGBA
 INFO:root:Happy - Check if the palette colors is happy,
+INFO:root:There are no non-transparent pixel out of the circle
 INFO:root:Palette colors found: 251
 INFO:root:Start clustering, number of centers: 5
 INFO:root:Is happy? False
-INFO:root:get_palette_sentiment took 0.86 seconds to execute.
+INFO:root:get_palette_sentiment took 0.87 seconds to execute.
 INFO:root:Saving image at ./examples/output/eyes.png
-INFO:root:base took 0.88 seconds to execute.
+INFO:root:base took 0.89 seconds to execute.
 ```
 
 ### Sample 4
@@ -207,6 +218,7 @@ Sample Info
 | ------------ |------------ | ------------- |
 |![Image 1](./examples/base/github.png)| ![Image 2](./examples/output/github.png) | 0.86 seconds|
 ```
+>  python3 ./src/main.py github
 INFO:root:Parallel - Image path: ./examples/base/github.png
 INFO:root:Image format : PNG
 INFO:root:Image mode : RGBA
@@ -217,10 +229,8 @@ INFO:root:There are no non-transparent pixel out of the circle
 INFO:root:Palette colors found: 1
 INFO:root:Is happy? False
 INFO:root: - Maybe we can fix this..
-INFO:root: - Swapping colors [((0, 0, 0, 0), 'red')]
-INFO:root:Swapping no dominants colors [((0, 0, 0, 0), 'red')]
-INFO:root:Swapping no dominants colors [(0, 0, 0, 0)]
-INFO:root:get_palette_sentiment took 1.35 seconds to execute.
+INFO:root: - Swapping colors [((0, 0, 0, 0), 'green')]
+INFO:root:get_palette_sentiment took 1.23 seconds to execute.
 INFO:root:Saving image at ./examples/output/github.png
-INFO:root:base took 1.38 seconds to execute.
+INFO:root:base took 1.25 seconds to execute.
 ```
