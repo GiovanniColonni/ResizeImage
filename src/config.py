@@ -11,4 +11,7 @@ PATH_INVALID = "./examples/invalid"
 PATH_OUTPUT = "./examples/output"
 
 def get_random_sample():
+    """
+    It returns a random sample from the sample directory in case no name is passed to the program.
+    """
     return NAMES[randint(0,len(NAMES)-1)]

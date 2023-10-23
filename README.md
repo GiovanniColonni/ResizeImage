@@ -16,6 +16,8 @@ Additionally, you can create a parallel function that converts the given image (
 
 (if you want to just directyl to the execution part [click here](#example-of-execution))
 
+The relevant part of the code can be found in `login.py` in the function `base`
+
 I'm new to image manipulation, but I immediately chose Python as my first attempt due to its convenience and simplicity. I found Pillow (PIL) and after some attempts I found that it was a good choise for me. 
 
 I approach the problem by splitting it steps:

@@ -31,7 +31,11 @@ def get_random_happy_color():
     return happy_colors[random.randint(0,len(happy_colors)-1)]
 
 def get_valid_image(path) -> object | bool:
-
+    """
+    Check if the image is PNG and RGBA, it also check the size and return the image object. 
+    If you have an error at this stage the image is probably corrupted or truncated and so
+    you can just exit the program.
+    """
     try:
         img = Image.open(path)
         img.load()
@@ -80,6 +84,9 @@ def check_shape(img):
 
 @log_time
 def get_palette_sentiment(img:object) -> dict:
+    """
+    This function extract the palette and run the sentiment analysis on it.
+    """
     logging.info(f"Happy - Check if the palette colors is happy,")
     palette = get_colors(img)
     logging.info(f"Palette colors found: {len(palette)}")
@@ -92,6 +99,7 @@ def get_palette_sentiment(img:object) -> dict:
     
     happy_colors = [(is_happy(color),color) for color in dominats]
     
+    # check if the palette is happy or not
     h = sum(1 for v in happy_colors if(v[0]))
     if(h > 2 and h > int(len(happy_colors)/2)):
         h = h > int(len(happy_colors)/2)
@@ -99,7 +107,8 @@ def get_palette_sentiment(img:object) -> dict:
         h = h > 0
         
     logging.info(f"Is happy? {h}")
-    if len_palette < 2:
+    if not h and len_palette < 2:
+        # we have 2 or 1 color, it make sense to remap the sad colors
         logging.info(f" - Maybe we can fix this..")
         no_happy_map = remap_sad_colors(palette)
         logging.info(f" - Swapping colors {no_happy_map}")
@@ -177,6 +186,11 @@ def is_transparent(rgba):
     return a > 0.9
 
 def get_colors(img:object):
+    """
+    This function is used as implementation of the get_palette function. 
+    While looping for the colors the function also create a transparent circle
+    around the image and check if there are non-transparent pixel out of the circle.
+    """
     out_pixel = False
     width, height = TARGET_SIZE
     colors = []
@@ -261,19 +275,17 @@ def happy_or_swap(img:object):
 @log_time
 def base(path:str,path_out:str):
     logging.info(f"Parallel - Image path: {path}")
-        
+    
     img = get_valid_image(path)
     if(not img):
         logging.error("Invalid image")
         return
     
-    #check_shape(img)
     get_palette_sentiment(img)
 
-    logging.info(f"Saving image at {path_out}")
-    
+    logging.info(f"Saving image at {path_out}")    
     img.save(path_out)
-
+    
     return
 
 
