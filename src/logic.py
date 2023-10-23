@@ -18,6 +18,8 @@ happy_colors_old = [
     (255, 165, 0, 1), # orange]
 ]
 
+# The colors are set by using names since
+# the old way was not working.
 happy_colors = [
     "red", # red
     "blue", # blue
@@ -149,6 +151,10 @@ def is_happy_old(rgba):
     return any([True for start,end in happy_color_ranges if start <= h < end])
 
 def is_happy(rgb):
+    """
+    Check if the color is happy or not by checking the hue and removing the 
+    alpha channel information.
+    """
     rgb = rgb[:3]  # Ignore alpha channel
     r, g, b = [x / 255 for x in rgb]  # Normalize values to the range [0, 1]
 
@@ -244,6 +250,9 @@ def swap_no_dominants(img:object,no_happy:dict):
     return
 
 def remap_sad_colors(colors:list):    
+    """
+    For each sad color get a random happy color.
+    """
     return[(color,get_random_happy_color()) for color in colors if(not color[0])]
     
 def make_happy(img:object,info:dict):
@@ -285,7 +294,7 @@ def base(path:str,path_out:str):
 
     logging.info(f"Saving image at {path_out}")    
     img.save(path_out)
-    
+
     return
 
 

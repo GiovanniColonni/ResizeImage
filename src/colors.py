@@ -10,6 +10,10 @@ import warnings
 warnings.warn = warn
 
 def extract_dominant_colors_from_palette(palette, num_colors=5):
+    """
+    If there are too many colors in the image we need to reduce them to a smaller set of dominant colors.
+    This is done by using K-Means clustering, in this way we have a smaller set of colors to work with.
+    """
     logging.info(f"Start clustering, number of centers: {num_colors}")
     # Use K-Means clustering to extract dominant colors
     kmeans = KMeans(n_clusters=num_colors)
