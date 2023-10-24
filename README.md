@@ -55,8 +55,6 @@ Anyway the actual given solution substitude the colors only if there are just fe
 
 ### Final consideration
 
-Consideration on Results !!!
-
 If I envision that this assignment is part of a product then there is plenty of room to improve the solution, from the algorithm of substitution of pixel to the color categorization, there are several areas where refinement can significantly improve the product. 
 Image processing, while not my primary area of expertise, was a fascinating challenge. For this reason I follow a structured approach that would allow me to break down the problem into manageable components. This segmentation of tasks, I believe, is a vital strategy to address complex issues, ensuring that each element of the solution can be analyzed, improved, and optimized independently.
 
